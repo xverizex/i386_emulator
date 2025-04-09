@@ -87,6 +87,18 @@ void opcode_pop_spesp (struct emu_i386 *emu);
 void opcode_pop_bpebp (struct emu_i386 *emu);
 void opcode_pop_siesi (struct emu_i386 *emu);
 void opcode_pop_diedi (struct emu_i386 *emu);
+void opcode_bound_r1632_m1632 (struct emu_i386 *emu);
+void opcode_aprl_rm16_r16 (struct emu_i386 *emu);
+void opcode_popa_popad (struct emu_i386 *emu);
+void opcode_pusha_pushad (struct emu_i386 *emu);
+void opcode_imul_r1632_rm1632_imm1632 (struct emu_i386 *emu);
+void opcode_imul_r1632_rm1632_imm8 (struct emu_i386 *emu);
+void opcode_insb (struct emu_i386 *emu);
+void opcode_inswd (struct emu_i386 *emu);
+void opcode_outsb (struct emu_i386 *emu);
+void opcode_outswd (struct emu_i386 *emu);
+void opcode_push_imm8 (struct emu_i386 *emu);
+void opcode_push_imm1632 (struct emu_i386 *emu);
 
 static void init (struct emu_i386 *emu)
 {
@@ -187,6 +199,22 @@ static void init (struct emu_i386 *emu)
 		opcode_pop_bpebp,                /* 0x5d */
 		opcode_pop_siesi,                /* 0x5e */
 		opcode_pop_diedi,                /* 0x5f */
+		opcode_pusha_pushad,             /* 0x60 */
+		opcode_popa_popad,               /* 0x61 */
+		opcode_bound_r1632_m1632,        /* 0x62 */
+		opcode_aprl_rm16_r16,            /* 0x63 */
+		opcode_none,                     /* 0x64 */
+		opcode_none,                     /* 0x65 */
+		opcode_none,                     /* 0x66 */
+		opcode_none,                     /* 0x67 */
+		opcode_push_imm1632,             /* 0x68 */
+		opcode_imul_r1632_rm1632_imm1632,/* 0x69 */
+		opcode_push_imm8,                /* 0x6a */
+		opcode_imul_r1632_rm1632_imm8,   /* 0x6b */
+		opcode_insb,                     /* 0x6c */
+		opcode_inswd,                    /* 0x6d */
+		opcode_outsb,                    /* 0x6e */
+		opcode_outswd,                   /* 0x6f */
 	};
 }
 
