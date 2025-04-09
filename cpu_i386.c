@@ -53,6 +53,40 @@ void opcode_xor_r8_rm8 (struct emu_i386 *emu);
 void opcode_xor_r1632_rm1632 (struct emu_i386 *emu);
 void opcode_xor_al_imm8 (struct emu_i386 *emu);
 void opcode_xor_axeax_imm1632 (struct emu_i386 *emu);
+void opcode_aaa (struct emu_i386 *emu);
+void opcode_aas (struct emu_i386 *emu);
+void opcode_inc_axeax (struct emu_i386 *emu);
+void opcode_inc_cxecx (struct emu_i386 *emu);
+void opcode_inc_dxedx (struct emu_i386 *emu);
+void opcode_inc_bxebx (struct emu_i386 *emu);
+void opcode_inc_spesp (struct emu_i386 *emu);
+void opcode_inc_bpebp (struct emu_i386 *emu);
+void opcode_inc_siesi (struct emu_i386 *emu);
+void opcode_inc_diedi (struct emu_i386 *emu);
+void opcode_dec_axeax (struct emu_i386 *emu);
+void opcode_dec_cxecx (struct emu_i386 *emu);
+void opcode_dec_dxedx (struct emu_i386 *emu);
+void opcode_dec_bxebx (struct emu_i386 *emu);
+void opcode_dec_spesp (struct emu_i386 *emu);
+void opcode_dec_bpebp (struct emu_i386 *emu);
+void opcode_dec_siesi (struct emu_i386 *emu);
+void opcode_dec_diedi (struct emu_i386 *emu);
+void opcode_push_axeax (struct emu_i386 *emu);
+void opcode_push_cxecx (struct emu_i386 *emu);
+void opcode_push_dxedx (struct emu_i386 *emu);
+void opcode_push_bxebx (struct emu_i386 *emu);
+void opcode_push_spesp (struct emu_i386 *emu);
+void opcode_push_bpebp (struct emu_i386 *emu);
+void opcode_push_siesi (struct emu_i386 *emu);
+void opcode_push_diedi (struct emu_i386 *emu);
+void opcode_pop_axeax (struct emu_i386 *emu);
+void opcode_pop_cxecx (struct emu_i386 *emu);
+void opcode_pop_dxedx (struct emu_i386 *emu);
+void opcode_pop_bxebx (struct emu_i386 *emu);
+void opcode_pop_spesp (struct emu_i386 *emu);
+void opcode_pop_bpebp (struct emu_i386 *emu);
+void opcode_pop_siesi (struct emu_i386 *emu);
+void opcode_pop_diedi (struct emu_i386 *emu);
 
 static void init (struct emu_i386 *emu)
 {
@@ -111,6 +145,48 @@ static void init (struct emu_i386 *emu)
 		opcode_xor_r1632_rm1632,         /* 0x33 */
 		opcode_xor_al_imm8,              /* 0x34 */
 		opcode_xor_axeax_imm1632,        /* 0x35 */
+		opcode_none,                     /* 0x36 */
+		opcode_aaa,                      /* 0x37 */
+		opcode_cmp_rm8_r8,               /* 0x38 */
+		opcode_cmp_rm1632_r1632,         /* 0x39 */
+		opcode_cmp_r8_rm8,               /* 0x3a */
+		opcode_cmp_r1632_rm1632,         /* 0x3b */
+		opcode_cmp_al_imm8,              /* 0x3c */
+		opcode_cmp_axeax_imm1632,        /* 0x3d */
+		opcode_none,                     /* 0x3e */
+		opcode_aas,                      /* 0x3f */
+		opcode_inc_axeax,                /* 0x40 */
+		opcode_inc_cxecx,                /* 0x41 */
+		opcode_inc_dxedx,                /* 0x42 */
+		opcode_inc_bxebx,                /* 0x43 */
+		opcode_inc_spesp,                /* 0x44 */
+		opcode_inc_bpebp,                /* 0x45 */
+		opcode_inc_siesi,                /* 0x46 */
+		opcode_inc_diedi,                /* 0x47 */
+		opcode_dec_axeax,                /* 0x48 */
+		opcode_dec_cxecx,                /* 0x49 */
+		opcode_dec_dxedx,                /* 0x4a */
+		opcode_dec_bxebx,                /* 0x4b */
+		opcode_dec_spesp,                /* 0x4c */
+		opcode_dec_bpebp,                /* 0x4d */
+		opcode_dec_siesi,                /* 0x4e */
+		opcode_dec_diedi,                /* 0x4f */
+		opcode_push_axeax,               /* 0x50 */
+		opcode_push_cxecx,               /* 0x51 */
+		opcode_push_dxedx,               /* 0x52 */
+		opcode_push_bxebx,               /* 0x53 */
+		opcode_push_spesp,               /* 0x54 */
+		opcode_push_bpebp,               /* 0x55 */
+		opcode_push_siesi,               /* 0x56 */
+		opcode_push_diedi,               /* 0x57 */
+		opcode_pop_axeax,                /* 0x58 */
+		opcode_pop_cxecx,                /* 0x59 */
+		opcode_pop_dxedx,                /* 0x5a */
+		opcode_pop_bxebx,                /* 0x5b */
+		opcode_pop_spesp,                /* 0x5c */
+		opcode_pop_bpebp,                /* 0x5d */
+		opcode_pop_siesi,                /* 0x5e */
+		opcode_pop_diedi,                /* 0x5f */
 	};
 }
 
