@@ -26,6 +26,33 @@ void opcode_adc_al_imm8 (struct emu_i386 *emu);
 void opcode_adc_axeax_imm1632 (struct emu_i386 *emu);
 void opcode_push_ss (struct emu_i386 *emu);
 void opcode_pop_ss (struct emu_i386 *emu);
+void opcode_pop_ds (struct emu_i386 *emu);
+void opcode_and_rm8_r8 (struct emu_i386 *emu);
+void opcode_and_rm1632_r1632 (struct emu_i386 *emu);
+void opcode_and_r8_rm8 (struct emu_i386 *emu);
+void opcode_and_r1632_rm1632 (struct emu_i386 *emu);
+void opcode_and_al_imm8 (struct emu_i386 *emu);
+void opcode_and_axeax_imm1632 (struct emu_i386 *emu);
+void opcode_daa (struct emu_i386 *emu);
+void opcode_sbb_rm8_r8 (struct emu_i386 *emu);
+void opcode_sbb_rm1632_r1632 (struct emu_i386 *emu);
+void opcode_sbb_r8_rm8 (struct emu_i386 *emu);
+void opcode_sbb_r1632_rm1632 (struct emu_i386 *emu);
+void opcode_sbb_al_imm8 (struct emu_i386 *emu);
+void opcode_sbb_axeax_imm1632 (struct emu_i386 *emu);
+void opcode_sub_rm8_r8 (struct emu_i386 *emu);
+void opcode_sub_rm1632_r1632 (struct emu_i386 *emu);
+void opcode_sub_r8_rm8 (struct emu_i386 *emu);
+void opcode_sub_r1632_rm1632 (struct emu_i386 *emu);
+void opcode_sub_al_imm8 (struct emu_i386 *emu);
+void opcode_sub_axeax_imm1632 (struct emu_i386 *emu);
+void opcode_das (struct emu_i386 *emu);
+void opcode_xor_rm8_r8 (struct emu_i386 *emu);
+void opcode_xor_rm1632_r1632 (struct emu_i386 *emu);
+void opcode_xor_r8_rm8 (struct emu_i386 *emu);
+void opcode_xor_r1632_rm1632 (struct emu_i386 *emu);
+void opcode_xor_al_imm8 (struct emu_i386 *emu);
+void opcode_xor_axeax_imm1632 (struct emu_i386 *emu);
 
 static void init (struct emu_i386 *emu)
 {
@@ -54,6 +81,36 @@ static void init (struct emu_i386 *emu)
 		opcode_adc_axeax_imm1632,        /* 0x15 */
 		opcode_push_ss,                  /* 0x16 */
 		opcode_pop_ss,                   /* 0x17 */
+		opcode_sbb_rm8_r8,               /* 0x18 */
+		opcode_sbb_rm1632_r1632,         /* 0x19 */
+		opcode_sbb_r8_rm8,               /* 0x1a */
+		opcode_sbb_r1632_rm1632,         /* 0x1b */
+		opcode_sbb_al_imm8,              /* 0x1c */
+		opcode_sbb_axeax_imm1632,        /* 0x1d */
+		opcode_push_ds,                  /* 0x1e */
+		opcode_pop_ds,                   /* 0x1f */
+		opcode_and_rm8_r8,               /* 0x20 */
+		opcode_and_rm1632_r1632,         /* 0x21 */
+		opcode_and_r8_rm8,               /* 0x22 */
+		opcode_and_r1632_rm1632,         /* 0x23 */
+		opcode_and_al_imm8,              /* 0x24 */
+		opcode_and_axeax_imm1632,        /* 0x25 */
+		opcode_none,                     /* 0x26 */
+		opcode_daa,                      /* 0x27 */
+		opcode_sub_rm8_r8,               /* 0x28 */
+		opcode_sub_rm1632_r1632,         /* 0x29 */
+		opcode_sub_r8_rm8,               /* 0x2a */
+		opcode_sub_r1632_rm1632,         /* 0x2b */
+		opcode_sub_al_imm8,              /* 0x2c */
+		opcode_sub_axeax_imm1632,        /* 0x2d */
+		opcode_none,                     /* 0x2e */
+		opcode_das,                      /* 0x2f */
+		opcode_xor_rm8_r8,               /* 0x30 */
+		opcode_xor_rm1632_r1632,         /* 0x31 */
+		opcode_xor_r8_rm8,               /* 0x32 */
+		opcode_xor_r1632_rm1632,         /* 0x33 */
+		opcode_xor_al_imm8,              /* 0x34 */
+		opcode_xor_axeax_imm1632,        /* 0x35 */
 	};
 }
 
