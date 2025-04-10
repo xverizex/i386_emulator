@@ -1,240 +1,6 @@
 #include <stdio.h>
 #include "cpu.h"
-
-typedef void (*_handler) (struct emu_i386 *emu);
-
-void opcode_none (struct emu_i386 *emu);
-void opcode_add_rm8_r8 (struct emu_i386 *emu);
-void opcode_add_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_add_r8_rm8 (struct emu_i386 *emu);
-void opcode_add_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_add_al_imm8 (struct emu_i386 *emu);
-void opcode_add_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_push_es (struct emu_i386 *emu);
-void opcode_pop_es (struct emu_i386 *emu);
-void opcode_or_rm8_r8 (struct emu_i386 *emu);
-void opcode_or_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_or_r8_rm8 (struct emu_i386 *emu);
-void opcode_or_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_or_al_imm8 (struct emu_i386 *emu);
-void opcode_or_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_adc_rm8_r8 (struct emu_i386 *emu);
-void opcode_adc_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_adc_r8_rm8 (struct emu_i386 *emu);
-void opcode_adc_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_adc_al_imm8 (struct emu_i386 *emu);
-void opcode_adc_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_push_ss (struct emu_i386 *emu);
-void opcode_push_ds (struct emu_i386 *emu);
-void opcode_pop_ss (struct emu_i386 *emu);
-void opcode_pop_ds (struct emu_i386 *emu);
-void opcode_and_rm8_r8 (struct emu_i386 *emu);
-void opcode_and_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_and_r8_rm8 (struct emu_i386 *emu);
-void opcode_and_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_and_al_imm8 (struct emu_i386 *emu);
-void opcode_and_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_daa (struct emu_i386 *emu);
-void opcode_sbb_rm8_r8 (struct emu_i386 *emu);
-void opcode_sbb_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_sbb_r8_rm8 (struct emu_i386 *emu);
-void opcode_sbb_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_sbb_al_imm8 (struct emu_i386 *emu);
-void opcode_sbb_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_cmp_rm8_r8 (struct emu_i386 *emu);
-void opcode_cmp_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_cmp_r8_rm8 (struct emu_i386 *emu);
-void opcode_cmp_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_cmp_al_imm8 (struct emu_i386 *emu);
-void opcode_cmp_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_sub_rm8_r8 (struct emu_i386 *emu);
-void opcode_sub_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_sub_r8_rm8 (struct emu_i386 *emu);
-void opcode_sub_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_sub_al_imm8 (struct emu_i386 *emu);
-void opcode_sub_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_das (struct emu_i386 *emu);
-void opcode_xor_rm8_r8 (struct emu_i386 *emu);
-void opcode_xor_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_xor_r8_rm8 (struct emu_i386 *emu);
-void opcode_xor_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_xor_al_imm8 (struct emu_i386 *emu);
-void opcode_xor_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_aaa (struct emu_i386 *emu);
-void opcode_aas (struct emu_i386 *emu);
-void opcode_inc_axeax (struct emu_i386 *emu);
-void opcode_inc_cxecx (struct emu_i386 *emu);
-void opcode_inc_dxedx (struct emu_i386 *emu);
-void opcode_inc_bxebx (struct emu_i386 *emu);
-void opcode_inc_spesp (struct emu_i386 *emu);
-void opcode_inc_bpebp (struct emu_i386 *emu);
-void opcode_inc_siesi (struct emu_i386 *emu);
-void opcode_inc_diedi (struct emu_i386 *emu);
-void opcode_dec_axeax (struct emu_i386 *emu);
-void opcode_dec_cxecx (struct emu_i386 *emu);
-void opcode_dec_dxedx (struct emu_i386 *emu);
-void opcode_dec_bxebx (struct emu_i386 *emu);
-void opcode_dec_spesp (struct emu_i386 *emu);
-void opcode_dec_bpebp (struct emu_i386 *emu);
-void opcode_dec_siesi (struct emu_i386 *emu);
-void opcode_dec_diedi (struct emu_i386 *emu);
-void opcode_push_axeax (struct emu_i386 *emu);
-void opcode_push_cxecx (struct emu_i386 *emu);
-void opcode_push_dxedx (struct emu_i386 *emu);
-void opcode_push_bxebx (struct emu_i386 *emu);
-void opcode_push_spesp (struct emu_i386 *emu);
-void opcode_push_bpebp (struct emu_i386 *emu);
-void opcode_push_siesi (struct emu_i386 *emu);
-void opcode_push_diedi (struct emu_i386 *emu);
-void opcode_pop_axeax (struct emu_i386 *emu);
-void opcode_pop_cxecx (struct emu_i386 *emu);
-void opcode_pop_dxedx (struct emu_i386 *emu);
-void opcode_pop_bxebx (struct emu_i386 *emu);
-void opcode_pop_spesp (struct emu_i386 *emu);
-void opcode_pop_bpebp (struct emu_i386 *emu);
-void opcode_pop_siesi (struct emu_i386 *emu);
-void opcode_pop_diedi (struct emu_i386 *emu);
-void opcode_bound_r1632_m1632 (struct emu_i386 *emu);
-void opcode_aprl_rm16_r16 (struct emu_i386 *emu);
-void opcode_popa_popad (struct emu_i386 *emu);
-void opcode_pusha_pushad (struct emu_i386 *emu);
-void opcode_imul_r1632_rm1632_imm1632 (struct emu_i386 *emu);
-void opcode_imul_r1632_rm1632_imm8 (struct emu_i386 *emu);
-void opcode_insb (struct emu_i386 *emu);
-void opcode_inswd (struct emu_i386 *emu);
-void opcode_outsb (struct emu_i386 *emu);
-void opcode_outswd (struct emu_i386 *emu);
-void opcode_push_imm8 (struct emu_i386 *emu);
-void opcode_push_imm1632 (struct emu_i386 *emu);
-void group_ext_0 (struct emu_i386 *emu);
-void group_ext_1 (struct emu_i386 *emu);
-void group_ext_2 (struct emu_i386 *emu);
-void opcode_bsf_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_bsr_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_bt_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_group_test_bt_rm1632_imm8 (struct emu_i386 *emu);
-void opcode_btc_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_btr_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_bts_rm1632_r1632 (struct emu_i386 *emu);
-void opcode_clts (struct emu_i386 *emu);
-void opcode_imul_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_ja_rel1632 (struct emu_i386 *emu);
-void opcode_jae_rel1632 (struct emu_i386 *emu);
-void opcode_jb_rel1632 (struct emu_i386 *emu);
-void opcode_jbe_rel1632 (struct emu_i386 *emu);
-void opcode_je_rel1632 (struct emu_i386 *emu);
-void opcode_jg_rel1632 (struct emu_i386 *emu);
-void opcode_jge_rel1632 (struct emu_i386 *emu);
-void opcode_jl_rel1632 (struct emu_i386 *emu);
-void opcode_jle_rel1632 (struct emu_i386 *emu);
-void opcode_jne_rel1632 (struct emu_i386 *emu);
-void opcode_jno_rel1632 (struct emu_i386 *emu);
-void opcode_jnp_rel1632 (struct emu_i386 *emu);
-void opcode_jns_rel1632 (struct emu_i386 *emu);
-void opcode_jo_rel1632 (struct emu_i386 *emu);
-void opcode_jpe_rel1632 (struct emu_i386 *emu);
-void opcode_js_rel1632 (struct emu_i386 *emu);
-void opcode_lar_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_lgdt_lidt_m1632 (struct emu_i386 *emu);
-void opcode_lss_r1632_m1632 (struct emu_i386 *emu);
-void opcode_lfs_r1632_m1632 (struct emu_i386 *emu);
-void opcode_lgs_r1632_m1632 (struct emu_i386 *emu);
-void opcode_lldt_rm16 (struct emu_i386 *emu);
-void opcode_lsl_r1632_rm1632 (struct emu_i386 *emu);
-void opcode_mov_r32_cr0_cr2_cr3 (struct emu_i386 *emu);
-void opcode_mov_r32_dr0 (struct emu_i386 *emu);
-void opcode_mov_dr0_r32 (struct emu_i386 *emu);
-void opcode_mov_r32_tr67 (struct emu_i386 *emu);
-void opcode_mov_tr67_r32 (struct emu_i386 *emu);
-void opcode_mov_cr023_r32 (struct emu_i386 *emu);
-void opcode_movsx_r1632_rm8 (struct emu_i386 *emu);
-void opcode_movsx_r32_rm16 (struct emu_i386 *emu);
-void opcode_movzx_r1632_rm8 (struct emu_i386 *emu);
-void opcode_movzx_r32_rm16 (struct emu_i386 *emu);
-void opcode_pop_fs (struct emu_i386 *emu);
-void opcode_pop_gs (struct emu_i386 *emu);
-void opcode_push_fs (struct emu_i386 *emu);
-void opcode_push_gs (struct emu_i386 *emu);
-void opcode_seta_rm8 (struct emu_i386 *emu);
-void opcode_setae_rm8 (struct emu_i386 *emu);
-void opcode_setb_rm8 (struct emu_i386 *emu);
-void opcode_setbe_rm8 (struct emu_i386 *emu);
-void opcode_sete_rm8 (struct emu_i386 *emu);
-void opcode_setg_rm8 (struct emu_i386 *emu);
-void opcode_setge_rm8 (struct emu_i386 *emu);
-void opcode_setl_rm8 (struct emu_i386 *emu);
-void opcode_setle_rm8 (struct emu_i386 *emu);
-void opcode_setne_rm8 (struct emu_i386 *emu);
-void opcode_seto_rm8 (struct emu_i386 *emu);
-void opcode_setno_rm8 (struct emu_i386 *emu);
-void opcode_setns_rm8 (struct emu_i386 *emu);
-void opcode_setpe_rm8 (struct emu_i386 *emu);
-void opcode_setpo_rm8 (struct emu_i386 *emu);
-void opcode_sets_rm8 (struct emu_i386 *emu);
-void opcode_shld_rm1632_r1632_imm8 (struct emu_i386 *emu);
-void opcode_shld_rm1632_r1632_cl (struct emu_i386 *emu);
-void opcode_shrd_rm1632_r1632_imm8 (struct emu_i386 *emu);
-void opcode_shrd_rm1632_r1632_cl (struct emu_i386 *emu);
-void opcode_aad (struct emu_i386 *emu);
-void opcode_aam (struct emu_i386 *emu);
-void opcode_base_rm8_imm8 (struct emu_i386 *emu);
-void opcode_base_rm1632_imm1632 (struct emu_i386 *emu);
-void opcode_base_rm1632_imm8 (struct emu_i386 *emu);
-void opcode_call_rel1632 (struct emu_i386 *emu);
-void opcode_ext_0_m1632 (struct emu_i386 *emu);
-void opcode_call_ptr1632 (struct emu_i386 *emu);
-void opcode_cbw_cwde (struct emu_i386 *emu);
-void opcode_clc (struct emu_i386 *emu);
-void opcode_cld (struct emu_i386 *emu);
-void opcode_cli (struct emu_i386 *emu);
-void opcode_cmc (struct emu_i386 *emu);
-void opcode_cmpsb (struct emu_i386 *emu);
-void opcode_cmpswd (struct emu_i386 *emu);
-void opcode_cwd_cdq (struct emu_i386 *emu);
-void opcode_ext_1_rm8 (struct emu_i386 *emu);
-void opcode_calc_al_rm8 (struct emu_i386 *emu);
-void opcode_calc_axeax_rm1632 (struct emu_i386 *emu);
-void opcode_enter_imm16_imm8 (struct emu_i386 *emu);
-void opcode_hlt (struct emu_i386 *emu);
-void opcode_in_al_imm8 (struct emu_i386 *emu);
-void opcode_in_axeax_imm1632 (struct emu_i386 *emu);
-void opcode_in_al_dx (struct emu_i386 *emu);
-void opcode_in_axeax_dx (struct emu_i386 *emu);
-void opcode_int_3 (struct emu_i386 *emu);
-void opcode_int_imm8 (struct emu_i386 *emu);
-void opcode_into (struct emu_i386 *emu);
-void opcode_iret_iretd (struct emu_i386 *emu);
-void opcode_ja_rel8 (struct emu_i386 *emu);
-void opcode_jae_rel8 (struct emu_i386 *emu);
-void opcode_jb_rel8 (struct emu_i386 *emu);
-void opcode_jbe_rel8 (struct emu_i386 *emu);
-void opcode_je_rel8 (struct emu_i386 *emu);
-void opcode_jg_rel8 (struct emu_i386 *emu);
-void opcode_jge_rel8 (struct emu_i386 *emu);
-void opcode_jl_rel8 (struct emu_i386 *emu);
-void opcode_jle_rel8 (struct emu_i386 *emu);
-void opcode_jne_rel8 (struct emu_i386 *emu);
-void opcode_jno_rel8 (struct emu_i386 *emu);
-void opcode_jo_rel8 (struct emu_i386 *emu);
-void opcode_jp_rel8 (struct emu_i386 *emu);
-void opcode_jpo_rel8 (struct emu_i386 *emu);
-void opcode_js_rel8 (struct emu_i386 *emu);
-void opcode_jns_rel8 (struct emu_i386 *emu);
-void opcode_jecxz_rel8 (struct emu_i386 *emu);
-void opcode_jmp_rel8 (struct emu_i386 *emu);
-void opcode_jmp_rel1632 (struct emu_i386 *emu);
-void opcode_jmp_ptr16_1632 (struct emu_i386 *emu);
-void opcode_lahf (struct emu_i386 *emu);
-void opcode_lea_r1632_m (struct emu_i386 *emu);
-void opcode_leave (struct emu_i386 *emu);
-void opcode_les_r1632_m16_1632 (struct emu_i386 *emu);
-void opcode_lds_r1632_m16_1632 (struct emu_i386 *emu);
-void opcode_lock (struct emu_i386 *emu);
-void opcode_lodsb (struct emu_i386 *emu);
-void opcode_lodswd (struct emu_i386 *emu);
-void opcode_loopne_rel8 (struct emu_i386 *emu);
-void opcode_loope_rel8 (struct emu_i386 *emu);
-void opcode_loop_rel8 (struct emu_i386 *emu);
+#include "instr.h"
 
 static void init (struct emu_i386 *emu)
 {
@@ -253,8 +19,8 @@ static void init (struct emu_i386 *emu)
 		opcode_or_r1632_rm1632,          /* 0x0b */
 		opcode_or_al_imm8,               /* 0x0c */
 		opcode_or_axeax_imm1632,         /* 0x0d */
-		opcode_none,                     /* 0x0e */
-		group_ext_0,                     /* 0x0f */
+		opcode_push_cs,                  /* 0x0e */
+		group_ext_0F,                     /* 0x0f */
 		opcode_adc_rm8_r8,               /* 0x10 */
 		opcode_adc_rm1632_r1632,         /* 0x11 */
 		opcode_adc_r8_rm8,               /* 0x12 */
@@ -371,90 +137,90 @@ static void init (struct emu_i386 *emu)
 		opcode_base_rm1632_imm1632,      /* 0x81 */
 		opcode_none,                     /* 0x82 */
 		opcode_base_rm1632_imm8,         /* 0x83 */
-		opcode_none,                     /* 0x84 */
-		opcode_none,                     /* 0x85 */
-		opcode_none,                     /* 0x86 */
-		opcode_none,                     /* 0x87 */
-		opcode_none,                     /* 0x88 */
-		opcode_none,                     /* 0x89 */
-		opcode_none,                     /* 0x8a */
-		opcode_none,                     /* 0x8b */
-		opcode_none,                     /* 0x8c */
-		opcode_lea_r1632_m,              /* 0x8d */
+		opcode_test_rm8_r8,              /* 0x84 */
+		opcode_test_rm1632_r1632,        /* 0x85 */
+		opcode_xchg_rm8_rm8,             /* 0x86 */
+		opcode_xchg_rm1632_rm1632,       /* 0x87 */
+		opcode_mov_rm8_r8,               /* 0x88 */
+		opcode_mov_rm1632_r1632,         /* 0x89 */
+		opcode_mov_r8_rm8,               /* 0x8a */
+		opcode_mov_r1632_rm1632,         /* 0x8b */
+		opcode_mov_rm16_sreg,            /* 0x8c */
+		opcode_lea_r1632_m_mov_sreg_rm16,/* 0x8d */
 		opcode_none,                     /* 0x8e */
-		opcode_none,                     /* 0x8f */
-		opcode_none,                     /* 0x90 */
-		opcode_none,                     /* 0x91 */
-		opcode_none,                     /* 0x92 */
-		opcode_none,                     /* 0x93 */
-		opcode_none,                     /* 0x94 */
-		opcode_none,                     /* 0x95 */
-		opcode_none,                     /* 0x96 */
-		opcode_none,                     /* 0x97 */
+		opcode_calc_m1632,               /* 0x8f */
+		opcode_nop,                      /* 0x90 */
+		opcode_xchg_axeax_cxecx,         /* 0x91 */
+		opcode_xchg_axeax_dxedx,         /* 0x92 */
+		opcode_xchg_axeax_bxebx,         /* 0x93 */
+		opcode_xchg_axeax_spesp,         /* 0x94 */
+		opcode_xchg_axeax_bpebp,         /* 0x95 */
+		opcode_xchg_axeax_siesi,         /* 0x96 */
+		opcode_xchg_axeax_diedi,         /* 0x97 */
 		opcode_cbw_cwde,                 /* 0x98 */
 		opcode_cwd_cdq,                  /* 0x99 */
 		opcode_call_ptr1632,             /* 0x9a */
-		opcode_none,                     /* 0x9b */
-		opcode_none,                     /* 0x9c */
-		opcode_none,                     /* 0x9d */
-		opcode_none,                     /* 0x9e */
+		opcode_wait,                     /* 0x9b */
+		opcode_pushf_pushfd,             /* 0x9c */
+		opcode_popf_popfd,               /* 0x9d */
+		opcode_sahf,                     /* 0x9e */
 		opcode_lahf,                     /* 0x9f */
-		opcode_none,                     /* 0xa0 */
-		opcode_none,                     /* 0xa1 */
-		opcode_none,                     /* 0xa2 */
-		opcode_none,                     /* 0xa3 */
-		opcode_none,                     /* 0xa4 */
-		opcode_none,                     /* 0xa5 */
+		opcode_mov_al_moffs8,            /* 0xa0 */
+		opcode_mov_axeax_ax_eax,         /* 0xa1 */
+		opcode_mov_moffs8_al,            /* 0xa2 */
+		opcode_mov_moffs1632_axeax,      /* 0xa3 */
+		opcode_movsb,                    /* 0xa4 */
+		opcode_movswd,                   /* 0xa5 */
 		opcode_cmpsb,                    /* 0xa6 */
 		opcode_cmpswd,                   /* 0xa7 */
-		opcode_none,                     /* 0xa8 */
-		opcode_none,                     /* 0xa9 */
-		opcode_none,                     /* 0xaa */
-		opcode_none,                     /* 0xab */
+		opcode_test_al_imm8,             /* 0xa8 */
+		opcode_test_axeax_imm1632,       /* 0xa9 */
+		opcode_stosb,                    /* 0xaa */
+		opcode_stoswd,                   /* 0xab */
 		opcode_lodsb,                    /* 0xac */
 		opcode_lodswd,                   /* 0xad */
-		opcode_none,                     /* 0xae */
-		opcode_none,                     /* 0xaf */
-		opcode_none,                     /* 0xb0 */
-		opcode_none,                     /* 0xb1 */
-		opcode_none,                     /* 0xb2 */
-		opcode_none,                     /* 0xb3 */
-		opcode_none,                     /* 0xb4 */
-		opcode_none,                     /* 0xb5 */
-		opcode_none,                     /* 0xb6 */
-		opcode_none,                     /* 0xb7 */
-		opcode_none,                     /* 0xb8 */
-		opcode_none,                     /* 0xb9 */
-		opcode_none,                     /* 0xba */
-		opcode_none,                     /* 0xbb */
-		opcode_none,                     /* 0xbc */
-		opcode_none,                     /* 0xbd */
-		opcode_none,                     /* 0xbe */
-		opcode_none,                     /* 0xbf */
-		opcode_none,                     /* 0xc0 */
-		opcode_none,                     /* 0xc1 */
-		opcode_none,                     /* 0xc2 */
-		opcode_none,                     /* 0xc3 */
+		opcode_scasb,                    /* 0xae */
+		opcode_scaswd,                   /* 0xaf */
+		opcode_mov_al_imm8,              /* 0xb0 */
+		opcode_mov_cl_imm8,              /* 0xb1 */
+		opcode_mov_dl_imm8,              /* 0xb2 */
+		opcode_mov_bl_imm8,              /* 0xb3 */
+		opcode_mov_ah_imm8,              /* 0xb4 */
+		opcode_mov_ch_imm8,              /* 0xb5 */
+		opcode_mov_dh_imm8,              /* 0xb6 */
+		opcode_mov_bh_imm8,              /* 0xb7 */
+		opcode_mov_axeax_imm1632,        /* 0xb8 */
+		opcode_mov_cxecx_imm1632,        /* 0xb9 */
+		opcode_mov_dxedx_imm1632,        /* 0xba */
+		opcode_mov_bxebx_imm1632,        /* 0xbb */
+		opcode_mov_spesp_imm1632,        /* 0xbc */
+		opcode_mov_bpebp_imm1632,        /* 0xbd */
+		opcode_mov_siesi_imm1632,        /* 0xbe */
+		opcode_mov_diedi_imm1632,        /* 0xbf */
+		opcode_ext_rotate_rm8_imm8,      /* 0xc0 */
+		opcode_ext_rotate_rm1632_imm8,   /* 0xc1 */
+		opcode_ret_near_imm16,           /* 0xc2 */
+		opcode_ret_near,                 /* 0xc3 */
 		opcode_les_r1632_m16_1632,       /* 0xc4 */
 		opcode_lds_r1632_m16_1632,       /* 0xc5 */
-		opcode_none,                     /* 0xc6 */
-		opcode_none,                     /* 0xc7 */
+		opcode_mov_rm8_imm8,             /* 0xc6 */ /* TODO: check that is 0xc6 */
+		opcode_mov_rm1632_imm1632,       /* 0xc7 */
 		opcode_enter_imm16_imm8,         /* 0xc8 */
 		opcode_leave,                    /* 0xc9 */
-		opcode_none,                     /* 0xca */
-		opcode_none,                     /* 0xcb */
+		opcode_ret_far_imm16,            /* 0xca */
+		opcode_ret_far,                  /* 0xcb */
 		opcode_int_3,                    /* 0xcc */
 		opcode_int_imm8,                 /* 0xcd */
 		opcode_into,                     /* 0xce */
 		opcode_iret_iretd,               /* 0xcf */
-		opcode_none,                     /* 0xd0 */
-		opcode_none,                     /* 0xd1 */
-		opcode_none,                     /* 0xd2 */
-		opcode_none,                     /* 0xd3 */
-		group_ext_2,                     /* 0xd4 */
-		group_ext_1,                     /* 0xd5 */
+		opcode_ext_rotate_rm8_1,         /* 0xd0 */
+		opcode_ext_rotate_rm1632_1,      /* 0xd1 */
+		opcode_ext_rotate_rm8_cl,        /* 0xd2 */
+		opcode_ext_rotate_rm1632_cl,     /* 0xd3 */
+		group_ext_D4,                     /* 0xd4 */
+		group_ext_D5,                     /* 0xd5 */
 		opcode_none,                     /* 0xd6 */
-		opcode_none,                     /* 0xd7 */
+		opcode_xlatb,                    /* 0xd7 */
 		opcode_none,                     /* 0xd8 */
 		opcode_none,                     /* 0xd9 */
 		opcode_none,                     /* 0xda */
@@ -469,35 +235,35 @@ static void init (struct emu_i386 *emu)
 		opcode_jecxz_rel8,               /* 0xe3 */
 		opcode_in_al_imm8,               /* 0xe4 */
 		opcode_in_axeax_imm1632,         /* 0xe5 */
-		opcode_none,                     /* 0xe6 */
-		opcode_none,                     /* 0xe7 */
+		opcode_out_imm8_al,              /* 0xe6 */
+		opcode_out_imm1632_axeax,        /* 0xe7 */
 		opcode_call_rel1632,             /* 0xe8 */
 		opcode_jmp_rel1632,              /* 0xe9 */
 		opcode_jmp_ptr16_1632,           /* 0xea */
 		opcode_jmp_rel8,                 /* 0xeb */
 		opcode_in_al_dx,                 /* 0xec */
 		opcode_in_axeax_dx,              /* 0xed */
-		opcode_none,                     /* 0xee */
-		opcode_none,                     /* 0xef */
+		opcode_out_dx_al,                /* 0xee */
+		opcode_out_dx_axeax,             /* 0xef */
 		opcode_lock,                     /* 0xf0 */
-		opcode_none,                     /* 0xf1 */
-		opcode_none,                     /* 0xf2 */
-		opcode_none,                     /* 0xf3 */
+		opcode_sti,                      /* 0xf1 */ /* TODO: check sti is F1 */
+		group_ext_F2,                    /* 0xf2 */
+		group_ext_F3,                    /* 0xf3 */
 		opcode_hlt,                      /* 0xf4 */
 		opcode_cmc,                      /* 0xf5 */
 		opcode_calc_al_rm8,              /* 0xf6 */
 		opcode_calc_axeax_rm1632,        /* 0xf7 */
 		opcode_clc,                      /* 0xf8 */
-		opcode_none,                     /* 0xf9 */
+		opcode_stc,                      /* 0xf9 */
 		opcode_cli,                      /* 0xfa */
 		opcode_none,                     /* 0xfb */
 		opcode_cld,                      /* 0xfc */
-		opcode_none,                     /* 0xfd */
+		opcode_std,                      /* 0xfd */
 		opcode_ext_1_rm8,                /* 0xfe */
 		opcode_ext_0_m1632               /* 0xff */
 	};
 
-	static _handler group_ext_0_handler[256] = {
+	static _handler group_ext_0F_handler[256] = {
 		opcode_lldt_rm16,                /* 0x00 */
 		opcode_lgdt_lidt_m1632,          /* 0x01 */
 		opcode_lar_r1632_rm1632,         /* 0x02 */
@@ -755,7 +521,7 @@ static void init (struct emu_i386 *emu)
 		opcode_none,                     /* 0xff */
 	};
 
-	static _handler group_ext_1_handler[256] = {
+	static _handler group_ext_D5_handler[256] = {
 		opcode_none,                     /* 0x00 */
 		opcode_none,                     /* 0x01 */
 		opcode_none,                     /* 0x02 */
@@ -1013,7 +779,7 @@ static void init (struct emu_i386 *emu)
 		opcode_none,                     /* 0xff */
 	};
 
-	static _handler group_ext_2_handler[256] = {
+	static _handler group_ext_D4_handler[256] = {
 		opcode_none,                     /* 0x00 */
 		opcode_none,                     /* 0x01 */
 		opcode_none,                     /* 0x02 */
@@ -1189,6 +955,522 @@ static void init (struct emu_i386 *emu)
 		opcode_none,                     /* 0xad */
 		opcode_none,                     /* 0xae */
 		opcode_none,                     /* 0xaf */
+		opcode_none,                     /* 0xb0 */
+		opcode_none,                     /* 0xb1 */
+		opcode_none,                     /* 0xb2 */
+		opcode_none,                     /* 0xb3 */
+		opcode_none,                     /* 0xb4 */
+		opcode_none,                     /* 0xb5 */
+		opcode_none,                     /* 0xb6 */
+		opcode_none,                     /* 0xb7 */
+		opcode_none,                     /* 0xb8 */
+		opcode_none,                     /* 0xb9 */
+		opcode_none,                     /* 0xba */
+		opcode_none,                     /* 0xbb */
+		opcode_none,                     /* 0xbc */
+		opcode_none,                     /* 0xbd */
+		opcode_none,                     /* 0xbe */
+		opcode_none,                     /* 0xbf */
+		opcode_none,                     /* 0xc0 */
+		opcode_none,                     /* 0xc1 */
+		opcode_none,                     /* 0xc2 */
+		opcode_none,                     /* 0xc3 */
+		opcode_none,                     /* 0xc4 */
+		opcode_none,                     /* 0xc5 */
+		opcode_none,                     /* 0xc6 */
+		opcode_none,                     /* 0xc7 */
+		opcode_none,                     /* 0xc8 */
+		opcode_none,                     /* 0xc9 */
+		opcode_none,                     /* 0xca */
+		opcode_none,                     /* 0xcb */
+		opcode_none,                     /* 0xcc */
+		opcode_none,                     /* 0xcd */
+		opcode_none,                     /* 0xce */
+		opcode_none,                     /* 0xcf */
+		opcode_none,                     /* 0xd0 */
+		opcode_none,                     /* 0xd1 */
+		opcode_none,                     /* 0xd2 */
+		opcode_none,                     /* 0xd3 */
+		opcode_none,                     /* 0xd4 */
+		opcode_none,                     /* 0xd5 */
+		opcode_none,                     /* 0xd6 */
+		opcode_none,                     /* 0xd7 */
+		opcode_none,                     /* 0xd8 */
+		opcode_none,                     /* 0xd9 */
+		opcode_none,                     /* 0xda */
+		opcode_none,                     /* 0xdb */
+		opcode_none,                     /* 0xdc */
+		opcode_none,                     /* 0xdd */
+		opcode_none,                     /* 0xde */
+		opcode_none,                     /* 0xdf */
+		opcode_none,                     /* 0xe0 */
+		opcode_none,                     /* 0xe1 */
+		opcode_none,                     /* 0xe2 */
+		opcode_none,                     /* 0xe3 */
+		opcode_none,                     /* 0xe4 */
+		opcode_none,                     /* 0xe5 */
+		opcode_none,                     /* 0xe6 */
+		opcode_none,                     /* 0xe7 */
+		opcode_none,                     /* 0xe8 */
+		opcode_none,                     /* 0xe9 */
+		opcode_none,                     /* 0xea */
+		opcode_none,                     /* 0xeb */
+		opcode_none,                     /* 0xec */
+		opcode_none,                     /* 0xed */
+		opcode_none,                     /* 0xee */
+		opcode_none,                     /* 0xef */
+		opcode_none,                     /* 0xf0 */
+		opcode_none,                     /* 0xf1 */
+		opcode_none,                     /* 0xf2 */
+		opcode_none,                     /* 0xf3 */
+		opcode_none,                     /* 0xf4 */
+		opcode_none,                     /* 0xf5 */
+		opcode_none,                     /* 0xf6 */
+		opcode_none,                     /* 0xf7 */
+		opcode_none,                     /* 0xf8 */
+		opcode_none,                     /* 0xf9 */
+		opcode_none,                     /* 0xfa */
+		opcode_none,                     /* 0xfb */
+		opcode_none,                     /* 0xfc */
+		opcode_none,                     /* 0xfd */
+		opcode_none,                     /* 0xfe */
+		opcode_none,                     /* 0xff */
+	};
+
+	static _handler group_ext_F3_handler[256] = {
+		opcode_none,                     /* 0x00 */
+		opcode_none,                     /* 0x01 */
+		opcode_none,                     /* 0x02 */
+		opcode_none,                     /* 0x03 */
+		opcode_none,                     /* 0x04 */
+		opcode_none,                     /* 0x05 */
+		opcode_none,                     /* 0x06 */
+		opcode_none,                     /* 0x07 */
+		opcode_none,                     /* 0x08 */
+		opcode_none,                     /* 0x09 */
+		opcode_none,                     /* 0x0a */
+		opcode_none,                     /* 0x0b */
+		opcode_none,                     /* 0x0c */
+		opcode_none,                     /* 0x0d */
+		opcode_none,                     /* 0x0e */
+		opcode_none,                     /* 0x0f */
+		opcode_none,                     /* 0x10 */
+		opcode_none,                     /* 0x11 */
+		opcode_none,                     /* 0x12 */
+		opcode_none,                     /* 0x13 */
+		opcode_none,                     /* 0x14 */
+		opcode_none,                     /* 0x15 */
+		opcode_none,                     /* 0x16 */
+		opcode_none,                     /* 0x17 */
+		opcode_none,                     /* 0x18 */
+		opcode_none,                     /* 0x19 */
+		opcode_none,                     /* 0x1a */
+		opcode_none,                     /* 0x1b */
+		opcode_none,                     /* 0x1c */
+		opcode_none,                     /* 0x1d */
+		opcode_none,                     /* 0x1e */
+		opcode_none,                     /* 0x1f */
+		opcode_none,                     /* 0x20 */
+		opcode_none,                     /* 0x21 */
+		opcode_none,                     /* 0x22 */
+		opcode_none,                     /* 0x23 */
+		opcode_none,                     /* 0x24 */
+		opcode_none,                     /* 0x25 */
+		opcode_none,                     /* 0x26 */
+		opcode_none,                     /* 0x27 */
+		opcode_none,                     /* 0x28 */
+		opcode_none,                     /* 0x29 */
+		opcode_none,                     /* 0x2a */
+		opcode_none,                     /* 0x2b */
+		opcode_none,                     /* 0x2c */
+		opcode_none,                     /* 0x2d */
+		opcode_none,                     /* 0x2e */
+		opcode_none,                     /* 0x2f */
+		opcode_none,                     /* 0x30 */
+		opcode_none,                     /* 0x31 */
+		opcode_none,                     /* 0x32 */
+		opcode_none,                     /* 0x33 */
+		opcode_none,                     /* 0x34 */
+		opcode_none,                     /* 0x35 */
+		opcode_none,                     /* 0x36 */
+		opcode_none,                     /* 0x37 */
+		opcode_none,                     /* 0x38 */
+		opcode_none,                     /* 0x39 */
+		opcode_none,                     /* 0x3a */
+		opcode_none,                     /* 0x3b */
+		opcode_none,                     /* 0x3c */
+		opcode_none,                     /* 0x3d */
+		opcode_none,                     /* 0x3e */
+		opcode_none,                     /* 0x3f */
+		opcode_none,                     /* 0x41 */
+		opcode_none,                     /* 0x42 */
+		opcode_none,                     /* 0x43 */
+		opcode_none,                     /* 0x44 */
+		opcode_none,                     /* 0x45 */
+		opcode_none,                     /* 0x46 */
+		opcode_none,                     /* 0x47 */
+		opcode_none,                     /* 0x48 */
+		opcode_none,                     /* 0x49 */
+		opcode_none,                     /* 0x4a */
+		opcode_none,                     /* 0x4b */
+		opcode_none,                     /* 0x4c */
+		opcode_none,                     /* 0x4d */
+		opcode_none,                     /* 0x4e */
+		opcode_none,                     /* 0x4f */
+		opcode_none,                     /* 0x50 */
+		opcode_none,                     /* 0x51 */
+		opcode_none,                     /* 0x52 */
+		opcode_none,                     /* 0x53 */
+		opcode_none,                     /* 0x54 */
+		opcode_none,                     /* 0x55 */
+		opcode_none,                     /* 0x56 */
+		opcode_none,                     /* 0x57 */
+		opcode_none,                     /* 0x58 */
+		opcode_none,                     /* 0x59 */
+		opcode_none,                     /* 0x5a */
+		opcode_none,                     /* 0x5b */
+		opcode_none,                     /* 0x5c */
+		opcode_none,                     /* 0x5d */
+		opcode_none,                     /* 0x5e */
+		opcode_none,                     /* 0x5f */
+		opcode_none,                     /* 0x60 */
+		opcode_none,                     /* 0x61 */
+		opcode_none,                     /* 0x62 */
+		opcode_none,                     /* 0x63 */
+		opcode_none,                     /* 0x64 */
+		opcode_none,                     /* 0x65 */
+		opcode_none,                     /* 0x66 */
+		opcode_none,                     /* 0x67 */
+		opcode_none,                     /* 0x68 */
+		opcode_none,                     /* 0x69 */
+		opcode_none,                     /* 0x6a */
+		opcode_none,                     /* 0x6b */
+		opcode_rep_ins_rm8_dx,           /* 0x6c */
+		opcode_rep_ins_rm1632_dx,        /* 0x6d */
+		opcode_rep_outs_dx_rm8,          /* 0x6e */
+		opcode_rep_outs_dx_rm1632,       /* 0x6f */
+		opcode_none,                     /* 0x70 */
+		opcode_none,                     /* 0x71 */
+		opcode_none,                     /* 0x72 */
+		opcode_none,                     /* 0x73 */
+		opcode_none,                     /* 0x74 */
+		opcode_none,                     /* 0x75 */
+		opcode_none,                     /* 0x76 */
+		opcode_none,                     /* 0x77 */
+		opcode_none,                     /* 0x78 */
+		opcode_none,                     /* 0x79 */
+		opcode_none,                     /* 0x7a */
+		opcode_none,                     /* 0x7b */
+		opcode_none,                     /* 0x7c */
+		opcode_none,                     /* 0x7d */
+		opcode_none,                     /* 0x7e */
+		opcode_none,                     /* 0x7f */
+		opcode_none,                     /* 0x80 */
+		opcode_none,                     /* 0x81 */
+		opcode_none,                     /* 0x82 */
+		opcode_none,                     /* 0x83 */
+		opcode_none,                     /* 0x84 */
+		opcode_none,                     /* 0x85 */
+		opcode_none,                     /* 0x86 */
+		opcode_none,                     /* 0x87 */
+		opcode_none,                     /* 0x88 */
+		opcode_none,                     /* 0x89 */
+		opcode_none,                     /* 0x8a */
+		opcode_none,                     /* 0x8b */
+		opcode_none,                     /* 0x8c */
+		opcode_none,                     /* 0x8d */
+		opcode_none,                     /* 0x8e */
+		opcode_none,                     /* 0x8f */
+		opcode_none,                     /* 0x90 */
+		opcode_none,                     /* 0x91 */
+		opcode_none,                     /* 0x92 */
+		opcode_none,                     /* 0x93 */
+		opcode_none,                     /* 0x94 */
+		opcode_none,                     /* 0x95 */
+		opcode_none,                     /* 0x96 */
+		opcode_none,                     /* 0x97 */
+		opcode_none,                     /* 0x98 */
+		opcode_none,                     /* 0x99 */
+		opcode_none,                     /* 0x9a */
+		opcode_none,                     /* 0x9b */
+		opcode_none,                     /* 0x9c */
+		opcode_none,                     /* 0x9d */
+		opcode_none,                     /* 0x9e */
+		opcode_none,                     /* 0x9f */
+		opcode_none,                     /* 0xa0 */
+		opcode_none,                     /* 0xa1 */
+		opcode_none,                     /* 0xa2 */
+		opcode_none,                     /* 0xa3 */
+		opcode_rep_movs_m8_m8,           /* 0xa4 */
+		opcode_rep_movs_m1632_m1632,     /* 0xa5 */
+		opcode_repe_cmps_m8_m8,          /* 0xa6 */
+		opcode_repe_cmps_m1632_m1632,    /* 0xa7 */
+		opcode_none,                     /* 0xa8 */
+		opcode_none,                     /* 0xa9 */
+		opcode_rep_stos_m8,              /* 0xaa */
+		opcode_rep_stos_m1632,           /* 0xab */
+		opcode_none,                     /* 0xac */
+		opcode_none,                     /* 0xad */
+		opcode_rep_scas_m8,              /* 0xae */
+		opcode_rep_scas_m1632,           /* 0xaf */
+		opcode_none,                     /* 0xb0 */
+		opcode_none,                     /* 0xb1 */
+		opcode_none,                     /* 0xb2 */
+		opcode_none,                     /* 0xb3 */
+		opcode_none,                     /* 0xb4 */
+		opcode_none,                     /* 0xb5 */
+		opcode_none,                     /* 0xb6 */
+		opcode_none,                     /* 0xb7 */
+		opcode_none,                     /* 0xb8 */
+		opcode_none,                     /* 0xb9 */
+		opcode_none,                     /* 0xba */
+		opcode_none,                     /* 0xbb */
+		opcode_none,                     /* 0xbc */
+		opcode_none,                     /* 0xbd */
+		opcode_none,                     /* 0xbe */
+		opcode_none,                     /* 0xbf */
+		opcode_none,                     /* 0xc0 */
+		opcode_none,                     /* 0xc1 */
+		opcode_none,                     /* 0xc2 */
+		opcode_none,                     /* 0xc3 */
+		opcode_none,                     /* 0xc4 */
+		opcode_none,                     /* 0xc5 */
+		opcode_none,                     /* 0xc6 */
+		opcode_none,                     /* 0xc7 */
+		opcode_none,                     /* 0xc8 */
+		opcode_none,                     /* 0xc9 */
+		opcode_none,                     /* 0xca */
+		opcode_none,                     /* 0xcb */
+		opcode_none,                     /* 0xcc */
+		opcode_none,                     /* 0xcd */
+		opcode_none,                     /* 0xce */
+		opcode_none,                     /* 0xcf */
+		opcode_none,                     /* 0xd0 */
+		opcode_none,                     /* 0xd1 */
+		opcode_none,                     /* 0xd2 */
+		opcode_none,                     /* 0xd3 */
+		opcode_none,                     /* 0xd4 */
+		opcode_none,                     /* 0xd5 */
+		opcode_none,                     /* 0xd6 */
+		opcode_none,                     /* 0xd7 */
+		opcode_none,                     /* 0xd8 */
+		opcode_none,                     /* 0xd9 */
+		opcode_none,                     /* 0xda */
+		opcode_none,                     /* 0xdb */
+		opcode_none,                     /* 0xdc */
+		opcode_none,                     /* 0xdd */
+		opcode_none,                     /* 0xde */
+		opcode_none,                     /* 0xdf */
+		opcode_none,                     /* 0xe0 */
+		opcode_none,                     /* 0xe1 */
+		opcode_none,                     /* 0xe2 */
+		opcode_none,                     /* 0xe3 */
+		opcode_none,                     /* 0xe4 */
+		opcode_none,                     /* 0xe5 */
+		opcode_none,                     /* 0xe6 */
+		opcode_none,                     /* 0xe7 */
+		opcode_none,                     /* 0xe8 */
+		opcode_none,                     /* 0xe9 */
+		opcode_none,                     /* 0xea */
+		opcode_none,                     /* 0xeb */
+		opcode_none,                     /* 0xec */
+		opcode_none,                     /* 0xed */
+		opcode_none,                     /* 0xee */
+		opcode_none,                     /* 0xef */
+		opcode_none,                     /* 0xf0 */
+		opcode_none,                     /* 0xf1 */
+		opcode_none,                     /* 0xf2 */
+		opcode_none,                     /* 0xf3 */
+		opcode_none,                     /* 0xf4 */
+		opcode_none,                     /* 0xf5 */
+		opcode_none,                     /* 0xf6 */
+		opcode_none,                     /* 0xf7 */
+		opcode_none,                     /* 0xf8 */
+		opcode_none,                     /* 0xf9 */
+		opcode_none,                     /* 0xfa */
+		opcode_none,                     /* 0xfb */
+		opcode_none,                     /* 0xfc */
+		opcode_none,                     /* 0xfd */
+		opcode_none,                     /* 0xfe */
+		opcode_none,                     /* 0xff */
+	};
+
+	static _handler group_ext_F2_handler[256] = {
+		opcode_none,                     /* 0x00 */
+		opcode_none,                     /* 0x01 */
+		opcode_none,                     /* 0x02 */
+		opcode_none,                     /* 0x03 */
+		opcode_none,                     /* 0x04 */
+		opcode_none,                     /* 0x05 */
+		opcode_none,                     /* 0x06 */
+		opcode_none,                     /* 0x07 */
+		opcode_none,                     /* 0x08 */
+		opcode_none,                     /* 0x09 */
+		opcode_none,                     /* 0x0a */
+		opcode_none,                     /* 0x0b */
+		opcode_none,                     /* 0x0c */
+		opcode_none,                     /* 0x0d */
+		opcode_none,                     /* 0x0e */
+		opcode_none,                     /* 0x0f */
+		opcode_none,                     /* 0x10 */
+		opcode_none,                     /* 0x11 */
+		opcode_none,                     /* 0x12 */
+		opcode_none,                     /* 0x13 */
+		opcode_none,                     /* 0x14 */
+		opcode_none,                     /* 0x15 */
+		opcode_none,                     /* 0x16 */
+		opcode_none,                     /* 0x17 */
+		opcode_none,                     /* 0x18 */
+		opcode_none,                     /* 0x19 */
+		opcode_none,                     /* 0x1a */
+		opcode_none,                     /* 0x1b */
+		opcode_none,                     /* 0x1c */
+		opcode_none,                     /* 0x1d */
+		opcode_none,                     /* 0x1e */
+		opcode_none,                     /* 0x1f */
+		opcode_none,                     /* 0x20 */
+		opcode_none,                     /* 0x21 */
+		opcode_none,                     /* 0x22 */
+		opcode_none,                     /* 0x23 */
+		opcode_none,                     /* 0x24 */
+		opcode_none,                     /* 0x25 */
+		opcode_none,                     /* 0x26 */
+		opcode_none,                     /* 0x27 */
+		opcode_none,                     /* 0x28 */
+		opcode_none,                     /* 0x29 */
+		opcode_none,                     /* 0x2a */
+		opcode_none,                     /* 0x2b */
+		opcode_none,                     /* 0x2c */
+		opcode_none,                     /* 0x2d */
+		opcode_none,                     /* 0x2e */
+		opcode_none,                     /* 0x2f */
+		opcode_none,                     /* 0x30 */
+		opcode_none,                     /* 0x31 */
+		opcode_none,                     /* 0x32 */
+		opcode_none,                     /* 0x33 */
+		opcode_none,                     /* 0x34 */
+		opcode_none,                     /* 0x35 */
+		opcode_none,                     /* 0x36 */
+		opcode_none,                     /* 0x37 */
+		opcode_none,                     /* 0x38 */
+		opcode_none,                     /* 0x39 */
+		opcode_none,                     /* 0x3a */
+		opcode_none,                     /* 0x3b */
+		opcode_none,                     /* 0x3c */
+		opcode_none,                     /* 0x3d */
+		opcode_none,                     /* 0x3e */
+		opcode_none,                     /* 0x3f */
+		opcode_none,                     /* 0x41 */
+		opcode_none,                     /* 0x42 */
+		opcode_none,                     /* 0x43 */
+		opcode_none,                     /* 0x44 */
+		opcode_none,                     /* 0x45 */
+		opcode_none,                     /* 0x46 */
+		opcode_none,                     /* 0x47 */
+		opcode_none,                     /* 0x48 */
+		opcode_none,                     /* 0x49 */
+		opcode_none,                     /* 0x4a */
+		opcode_none,                     /* 0x4b */
+		opcode_none,                     /* 0x4c */
+		opcode_none,                     /* 0x4d */
+		opcode_none,                     /* 0x4e */
+		opcode_none,                     /* 0x4f */
+		opcode_none,                     /* 0x50 */
+		opcode_none,                     /* 0x51 */
+		opcode_none,                     /* 0x52 */
+		opcode_none,                     /* 0x53 */
+		opcode_none,                     /* 0x54 */
+		opcode_none,                     /* 0x55 */
+		opcode_none,                     /* 0x56 */
+		opcode_none,                     /* 0x57 */
+		opcode_none,                     /* 0x58 */
+		opcode_none,                     /* 0x59 */
+		opcode_none,                     /* 0x5a */
+		opcode_none,                     /* 0x5b */
+		opcode_none,                     /* 0x5c */
+		opcode_none,                     /* 0x5d */
+		opcode_none,                     /* 0x5e */
+		opcode_none,                     /* 0x5f */
+		opcode_none,                     /* 0x60 */
+		opcode_none,                     /* 0x61 */
+		opcode_none,                     /* 0x62 */
+		opcode_none,                     /* 0x63 */
+		opcode_none,                     /* 0x64 */
+		opcode_none,                     /* 0x65 */
+		opcode_none,                     /* 0x66 */
+		opcode_none,                     /* 0x67 */
+		opcode_none,                     /* 0x68 */
+		opcode_none,                     /* 0x69 */
+		opcode_none,                     /* 0x6a */
+		opcode_none,                     /* 0x6b */
+		opcode_none,                     /* 0x6c */
+		opcode_none,                     /* 0x6d */
+		opcode_none,                     /* 0x6e */
+		opcode_none,                     /* 0x6f */
+		opcode_none,                     /* 0x70 */
+		opcode_none,                     /* 0x71 */
+		opcode_none,                     /* 0x72 */
+		opcode_none,                     /* 0x73 */
+		opcode_none,                     /* 0x74 */
+		opcode_none,                     /* 0x75 */
+		opcode_none,                     /* 0x76 */
+		opcode_none,                     /* 0x77 */
+		opcode_none,                     /* 0x78 */
+		opcode_none,                     /* 0x79 */
+		opcode_none,                     /* 0x7a */
+		opcode_none,                     /* 0x7b */
+		opcode_none,                     /* 0x7c */
+		opcode_none,                     /* 0x7d */
+		opcode_none,                     /* 0x7e */
+		opcode_none,                     /* 0x7f */
+		opcode_none,                     /* 0x80 */
+		opcode_none,                     /* 0x81 */
+		opcode_none,                     /* 0x82 */
+		opcode_none,                     /* 0x83 */
+		opcode_none,                     /* 0x84 */
+		opcode_none,                     /* 0x85 */
+		opcode_none,                     /* 0x86 */
+		opcode_none,                     /* 0x87 */
+		opcode_none,                     /* 0x88 */
+		opcode_none,                     /* 0x89 */
+		opcode_none,                     /* 0x8a */
+		opcode_none,                     /* 0x8b */
+		opcode_none,                     /* 0x8c */
+		opcode_none,                     /* 0x8d */
+		opcode_none,                     /* 0x8e */
+		opcode_none,                     /* 0x8f */
+		opcode_none,                     /* 0x90 */
+		opcode_none,                     /* 0x91 */
+		opcode_none,                     /* 0x92 */
+		opcode_none,                     /* 0x93 */
+		opcode_none,                     /* 0x94 */
+		opcode_none,                     /* 0x95 */
+		opcode_none,                     /* 0x96 */
+		opcode_none,                     /* 0x97 */
+		opcode_none,                     /* 0x98 */
+		opcode_none,                     /* 0x99 */
+		opcode_none,                     /* 0x9a */
+		opcode_none,                     /* 0x9b */
+		opcode_none,                     /* 0x9c */
+		opcode_none,                     /* 0x9d */
+		opcode_none,                     /* 0x9e */
+		opcode_none,                     /* 0x9f */
+		opcode_none,                     /* 0xa0 */
+		opcode_none,                     /* 0xa1 */
+		opcode_none,                     /* 0xa2 */
+		opcode_none,                     /* 0xa3 */
+		opcode_none,                     /* 0xa4 */
+		opcode_none,                     /* 0xa5 */
+		opcode_repne_cmps_m8_m8,         /* 0xa6 */
+		opcode_repne_cmps_m1632_m1632,   /* 0xa7 */
+		opcode_none,                     /* 0xa8 */
+		opcode_none,                     /* 0xa9 */
+		opcode_none,                     /* 0xaa */
+		opcode_none,                     /* 0xab */
+		opcode_none,                     /* 0xac */
+		opcode_none,                     /* 0xad */
+		opcode_repne_scas_m8,            /* 0xae */
+		opcode_repne_scas_m1632,         /* 0xaf */
 		opcode_none,                     /* 0xb0 */
 		opcode_none,                     /* 0xb1 */
 		opcode_none,                     /* 0xb2 */
