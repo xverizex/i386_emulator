@@ -54,8 +54,18 @@ struct cpu_i386 {
 	};
 };
 
+struct emu_i386;
+
+typedef void (*_instr_group) (struct emu_i386 *);
+
 struct emu_i386 {
 	struct cpu_i386 CPU;
+	_instr_group *base;
+	_instr_group *ext_0F;
+	_instr_group *ext_D5;
+	_instr_group *ext_D4;
+	_instr_group *ext_F3;
+	_instr_group *ext_F2;
 };
 
 #endif

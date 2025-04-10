@@ -4,7 +4,7 @@
 
 static void init (struct emu_i386 *emu)
 {
-	static _handler handler[256] = {
+	static _handler base[256] = {
 		opcode_add_rm8_r8,               /* 0x00 */
 		opcode_add_rm1632_r1632,         /* 0x01 */
 		opcode_add_r8_rm8,               /* 0x02 */
@@ -262,6 +262,7 @@ static void init (struct emu_i386 *emu)
 		opcode_ext_1_rm8,                /* 0xfe */
 		opcode_ext_0_m1632               /* 0xff */
 	};
+
 
 	static _handler group_ext_0F_handler[256] = {
 		opcode_lldt_rm16,                /* 0x00 */
@@ -1552,6 +1553,13 @@ static void init (struct emu_i386 *emu)
 		opcode_none,                     /* 0xfe */
 		opcode_none,                     /* 0xff */
 	};
+
+	emu->base = base;
+	emu->ext_0F = group_ext_0F_handler;
+	emu->ext_D5 = group_ext_D5_handler;
+	emu->ext_D4 = group_ext_D4_handler;
+	emu->ext_F3 = group_ext_F3_handler;
+	emu->ext_F2 = group_ext_F2_handler;
 #if 0
 	static _handler group[256] = {
 		opcode_none,                     /* 0x00 */
