@@ -23,6 +23,32 @@ enum Mode {
 #define EFLAG_REGISTER_RF                        0x008000
 #define EFLAG_REGISTER_VM                        0x010000
 
+enum R8_REG {
+	R8_AL,
+	R8_CL,
+	R8_DL,
+	R8_BL,
+	R8_AH,
+	R8_CH,
+	R8_DH,
+	R8_BH,
+	N_R8
+};
+
+enum LEVEL {
+	LEVEL_16_BIT,
+	LEVEL_32_BIT,
+	N_LEVEL
+};
+
+enum _16_BIT_ADDRESS_FORM {
+	_16_BIT_ADDRESS_FORM_REG_ADDR,
+	_16_BIT_ADDRESS_FORM_REG_ADDR_DISP8,
+	_16_BIT_ADDRESS_FORM_REG_ADDR_DISP16,
+	_16_BIT_ADDRESS_FORM_REG,
+	N_16_BIT_ADDRESS_FORM
+};
+
 struct cpu_i386 {
 	union {
 		struct {
@@ -99,6 +125,8 @@ struct emu_i386 {
 	uint8_t *data;
 	uint64_t sz_data;
 
+	/* level: 0 - real mode; 1 - protected 32 bit mode */
+	uint32_t level;
 };
 
 #endif

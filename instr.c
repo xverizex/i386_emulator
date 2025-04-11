@@ -1,4 +1,6 @@
+#include <stddef.h>
 #include "instr.h"
+#include "cpu.h"
 
 void opcode_none (struct emu_i386 *emu){}
 
@@ -11,7 +13,7 @@ static void _get_modrm_registers (uint8_t modrm_byte, uint8_t *mod,
 	*r1  = (modrm_byte >> 3) & 0x7;
 }
 
-uint8_t *_get_mod_0_r0 (struct emu_i386 *emu, uint8_t r)
+uint8_t *_get_16_mod_0_reg (struct emu_i386 *emu, uint8_t r)
 {
 	switch (r) {
 		case 0: return &emu->data[emu->CPU.BX + emu->CPU.SI];
@@ -25,12 +27,56 @@ uint8_t *_get_mod_0_r0 (struct emu_i386 *emu, uint8_t r)
 	}
 }
 
-uint8_t *_get_r0_by_mod (struct emu_i386 *emu, uint8_t mod, uint8_t r)
+uint8_t *_get_16_mod_1_reg (struct emu_i386 *emu, uint8_t r)
+{
+}
+
+uint8_t *_get_16_mod_2_reg (struct emu_i386 *emu, uint8_t r)
+{
+}
+
+uint8_t *_get_16_mod_3_reg (struct emu_i386 *emu, uint8_t r)
+{
+}
+
+static uint8_t *_16_bit_address_rm8 (struct emu_i386 *emu, uint8_t mod, uint8_t r)
 {
 	switch (mod) {
-		case 0x0:
-			return _get_mod_0_r0 (emu, r);
-			break;
+		case _16_BIT_ADDRESS_FORM_REG_ADDR: return _get_16_mod_0_reg (emu, r);
+		case _16_BIT_ADDRESS_FORM_REG_ADDR_DISP8: return _get_16_mod_1_reg (emu, r);
+		case _16_BIT_ADDRESS_FORM_REG_ADDR_DISP16: return _get_16_mod_2_reg (emu, r);
+		case _16_BIT_ADDRESS_FORM_REG: return _get_16_mod_2_reg (emu, r);
+	}
+}
+
+static uint8_t *_32_bit_address_rm8 (struct emu_i386 *emu, uint8_t mod, uint8_t r)
+{
+	return NULL;
+}
+
+typedef uint8_t* (*level_rm8_handle) (struct emu_i386 *emu, uint8_t mod, uint8_t r);
+
+static level_rm8_handle handle_rm8[2] = {
+	_16_bit_address_rm8,
+	_32_bit_address_rm8
+};
+
+uint8_t *_get_real_reg8_by_mod_and_reg (struct emu_i386 *emu, uint8_t mod, uint8_t r)
+{
+	return handle_rm8[emu->level] (emu, mod, r);
+}
+
+uint8_t *_get_real_reg8_by_reg (struct emu_i386 *emu, uint8_t r)
+{
+	switch (r) {
+		case R8_AL: return &emu->CPU.AL;
+		case R8_CL: return &emu->CPU.CL;
+		case R8_DL: return &emu->CPU.DL;
+		case R8_BL: return &emu->CPU.BL;
+		case R8_AH: return &emu->CPU.AH;
+		case R8_CH: return &emu->CPU.CH;
+		case R8_DH: return &emu->CPU.DH;
+		case R8_BH: return &emu->CPU.BH;
 	}
 }
 
@@ -39,7 +85,8 @@ static void impl_rm8_r8 (struct emu_i386 *emu)
 	uint8_t modrm_byte = emu->data[emu->off];
 	uint8_t mod, r0, r1;
 	_get_modrm_registers (modrm_byte, &mod, &r0, &r1);
-	uint8_t *r0_real = _get_r0_by_mod (emu, mod, r0);
+	uint8_t *r0_real = _get_real_reg8_by_mod_and_reg (emu, mod, r0);
+	uint8_t *r1_real = _get_real_reg8_by_reg (emu, r1);
 }
 
 void opcode_add_rm8_r8 (struct emu_i386 *emu)
