@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdint.h>
 #include "cpu.h"
 #include "instr.h"
 
 static void init (struct emu_i386 *emu)
 {
+	memset (emu, 0, sizeof (struct emu_i386));
+
 	static _handler base[256] = {
 		opcode_add_rm8_r8,               /* 0x00 */
 		opcode_add_rm1632_r1632,         /* 0x01 */
@@ -1560,6 +1564,9 @@ static void init (struct emu_i386 *emu)
 	emu->ext_D4 = group_ext_D4_handler;
 	emu->ext_F3 = group_ext_F3_handler;
 	emu->ext_F2 = group_ext_F2_handler;
+
+	emu->CPU.mode = REAL_MODE;
+	
 #if 0
 	static _handler group[256] = {
 		opcode_none,                     /* 0x00 */

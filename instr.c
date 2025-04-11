@@ -1,7 +1,53 @@
 #include "instr.h"
 
 void opcode_none (struct emu_i386 *emu){}
-void opcode_add_rm8_r8 (struct emu_i386 *emu){}
+
+static void _get_modrm_registers (uint8_t modrm_byte, uint8_t *mod,
+		uint8_t *r0,
+		uint8_t *r1)
+{
+	*mod = modrm_byte >> 6;
+	*r0  = modrm_byte & 0x7;
+	*r1  = (modrm_byte >> 3) & 0x7;
+}
+
+uint8_t *_get_mod_0_r0 (struct emu_i386 *emu, uint8_t r)
+{
+	switch (r) {
+		case 0: return &emu->data[emu->CPU.BX + emu->CPU.SI];
+		case 1: return &emu->data[emu->CPU.BX + emu->CPU.DI];
+		case 2: return &emu->data[emu->CPU.BP + emu->CPU.SI];
+		case 3: return &emu->data[emu->CPU.BP + emu->CPU.DI];
+		case 4: return &emu->data[emu->CPU.SI];
+		case 5: return &emu->data[emu->CPU.DI];
+		case 6: return &emu->data[*(uint16_t *) &emu->data[emu->off + 1]];
+		case 7: return &emu->data[emu->CPU.BX];
+	}
+}
+
+uint8_t *_get_r0_by_mod (struct emu_i386 *emu, uint8_t mod, uint8_t r)
+{
+	switch (mod) {
+		case 0x0:
+			return _get_mod_0_r0 (emu, r);
+			break;
+	}
+}
+
+static void impl_rm8_r8 (struct emu_i386 *emu)
+{
+	uint8_t modrm_byte = emu->data[emu->off];
+	uint8_t mod, r0, r1;
+	_get_modrm_registers (modrm_byte, &mod, &r0, &r1);
+	uint8_t *r0_real = _get_r0_by_mod (emu, mod, r0);
+}
+
+void opcode_add_rm8_r8 (struct emu_i386 *emu)
+{
+	emu->off++;
+	impl_rm8_r8 (emu);
+}
+
 void opcode_add_rm1632_r1632 (struct emu_i386 *emu){}
 void opcode_add_r8_rm8 (struct emu_i386 *emu){}
 void opcode_add_r1632_rm1632 (struct emu_i386 *emu){}
