@@ -80,19 +80,48 @@ uint8_t *_get_real_reg8_by_reg (struct emu_i386 *emu, uint8_t r)
 	}
 }
 
-static void impl_rm8_r8 (struct emu_i386 *emu)
+static void impl_get_regs_rm8_r8 (struct emu_i386 *emu, uint8_t **rr0, uint8_t **rr1)
 {
 	uint8_t modrm_byte = emu->data[emu->off];
 	uint8_t mod, r0, r1;
 	_get_modrm_registers (modrm_byte, &mod, &r0, &r1);
 	uint8_t *r0_real = _get_real_reg8_by_mod_and_reg (emu, mod, r0);
 	uint8_t *r1_real = _get_real_reg8_by_reg (emu, r1);
+	*rr0 = r0_real;
+	*rr1 = r1_real;
+}
+
+static void eq8 (uint8_t *r0, uint8_t r1)
+{
+	*r0 = r1;
+}
+
+static void check_flags_r8 (struct emu_i386 *emu,
+		uint8_t result,
+		uint32_t flags)
+{
+}
+
+static void impl_rm8_r8 (struct emu_i386 *emu,
+		uint8_t *r,
+		uint8_t result,
+		void (*eq) (uint8_t *r0, uint8_t r1),
+		uint32_t flags
+		)
+{
+	check_flags_r8 (emu, result, flags);
+	eq (r, result);
 }
 
 void opcode_add_rm8_r8 (struct emu_i386 *emu)
 {
 	emu->off++;
-	impl_rm8_r8 (emu);
+	uint8_t *r0, *r1;
+	impl_get_regs_rm8_r8 (emu, &r0, &r1);
+	impl_rm8_r8 (emu, r0, *r0 + *r1, eq8,
+			(EFLAG_REGISTER_OF|EFLAG_REGISTER_SF|EFLAG_REGISTER_ZF|
+			 EFLGA_REGISTER_AF|EFLAG_REGISTER_CF|EFLAG_REGISTER_CF)
+			);
 }
 
 void opcode_add_rm1632_r1632 (struct emu_i386 *emu){}
