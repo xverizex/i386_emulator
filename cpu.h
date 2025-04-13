@@ -100,6 +100,8 @@ struct cpu_i386 {
 	};
 
 	enum Mode mode;
+
+	uint32_t eflags;
 };
 
 struct emu_i386;

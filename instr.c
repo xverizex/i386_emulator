@@ -97,9 +97,27 @@ static void eq8 (uint8_t *r0, uint8_t r1)
 }
 
 static void check_flags_r8 (struct emu_i386 *emu,
+		uint8_t old_value,
 		uint8_t result,
 		uint32_t flags)
 {
+	emu->eflags &= ~(flags);
+
+	if (flags & EFLAG_REGISTER_CF) {
+		if (old_value > result) {
+			emu->eflags |= EFLAG_REGISTER_CF;
+		}
+	}
+	if (flags & EFLAG_REGISTER_ZF) {
+		if (result == 0) {
+			emu->eflags |= EFLAG_REGISTER_ZF;
+		}
+	}
+	if (flags & EFLAG_REGISTER_SF) {
+		if (result & 0x80) {
+			emu->eflags |= EFLAG_REGISTER_SF;
+		}
+	}
 }
 
 static void impl_rm8_r8 (struct emu_i386 *emu,
@@ -109,7 +127,7 @@ static void impl_rm8_r8 (struct emu_i386 *emu,
 		uint32_t flags
 		)
 {
-	check_flags_r8 (emu, result, flags);
+	check_flags_r8 (emu, *r, result, flags);
 	eq (r, result);
 }
 
